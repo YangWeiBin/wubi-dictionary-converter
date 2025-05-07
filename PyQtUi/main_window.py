@@ -47,6 +47,8 @@ class MainWindow(QMainWindow):
         self.sougou_wubi_obj = sougouwubi.SOUGOUwubi()
         self.entries = []
         self.wordList.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
+        self.entries.clear()
+        self.read_word_lib_to_entries(os.getcwd() + "\\data\\conf.myfmt")
         # connect signal-slot
         self.wordLibPathPbn.clicked.connect(self.import_word_lib)
         self.exportPbn.clicked.connect(self.export_word_lib)
@@ -54,6 +56,7 @@ class MainWindow(QMainWindow):
         self.wordList.itemDoubleClicked.connect(self.show_modify_word_ui)
         self.addWordPbn.clicked.connect(self.show_add_word_ui)
         self.delWordPbn.clicked.connect(self.del_word)
+        self.mergeWordPbn.clicked.connect(self.merge_word)
 
 
     # @pyqtSlot()
@@ -75,12 +78,26 @@ class MainWindow(QMainWindow):
         if selected_items:
             for item in selected_items:
                 selected_rows.add(item.row())
-            for row in selected_rows:
-                entry = self.entries.pop(row)
-                self.logText.append(f"Delete row:{row}, entry = {entry}.")
+            for index in sorted(selected_rows, reverse=True):
+                entry = self.entries.pop(index)
+                self.logText.append(f"Delete row:{index}, entry = {entry}.")
             self.update_entries_to_list()
         else:
             self.logText.append("No row is selected!")
+
+    def merge_word(self):
+        # 弹出文件选择对话框
+        word_lib_paths, _ = QFileDialog.getOpenFileNames(self, "选择文件", "",
+                                                       "所有格式 (*.myfmt *.dat *.plist *.ini);;"
+                                                       "自定义格式 (*.myfmt);;"
+                                                       "微软五笔格式 (*.dat);;"
+                                                       "Mac五笔格式 (*.plist);;"
+                                                       "搜狗和QQ五笔格式 (*.ini)")
+        for word_lib_path in word_lib_paths:
+            if word_lib_path:
+                self.logText.append(f"合并的文件: {word_lib_path}")
+                self.read_word_lib_to_entries(word_lib_path)
+
 
     def show_add_word_ui(self):
         update_word_dlg = updateword.UpdateWordDlg()
@@ -147,31 +164,44 @@ class MainWindow(QMainWindow):
         msg.exec()
 
     def update_entries_to_list(self):
+        self.remove_entries_duplicates()
         self.entries.sort(key=lambda x: x['code'])
         self.wordList.setRowCount(0)  # 清空表格
         for entry in self.entries:
             self.add_word(entry)
         self.logText.append(f"更新词库成功!")
 
+    def remove_entries_duplicates(self):
+        unique_entries = []
+        seen = set()
+        for entry in self.entries:
+            # 创建一个元组，表示 entry 的唯一标识
+            identifier = (entry['code'], entry['rank'], entry['word'])
+            # 检查此标识是否已经存在于 seen 集合中
+            if identifier not in seen:
+                seen.add(identifier)  # 如果没有，添加到集合
+                unique_entries.append(entry)  # 并将 entry 添加到 unique_entries
+            else:
+                self.logText.append(f"entry = {entry} 已存在!")
+        self.entries = unique_entries
+
     def read_word_lib_to_entries(self, word_lib_path):
-        self.entries.clear()
         extension = self.get_file_extension(word_lib_path)
-        self.entries = []
         if extension == '.myfmt':
-            self.entries = self.my_format_obj.txt_to_entries(word_lib_path)
+            self.entries += self.my_format_obj.txt_to_entries(word_lib_path)
         elif extension == '.dat':
-            self.entries = self.ms_wubi_obj.convert_dat_to_entries(word_lib_path)
+            self.entries += self.ms_wubi_obj.convert_dat_to_entries(word_lib_path)
         elif extension == '.plist':
-            self.entries = self.mac_wubi_obj.convert_plist_to_entries(word_lib_path)
+            self.entries += self.mac_wubi_obj.convert_plist_to_entries(word_lib_path)
         elif extension == '.ini':
             is_sougou_ini = None
             with open(word_lib_path, 'r', encoding='utf-8') as file:
                 first_line = file.readline()
                 is_sougou_ini = self.is_sougou_ini_file(first_line)
             if is_sougou_ini is True:
-                self.entries = self.sougou_wubi_obj.convert_sougou_udf_to_entries(word_lib_path)
+                self.entries += self.sougou_wubi_obj.convert_sougou_udf_to_entries(word_lib_path)
             elif is_sougou_ini is False:
-                self.entries = self.qq_wubi_obj.convert_qq_udf_to_entries(word_lib_path)
+                self.entries += self.qq_wubi_obj.convert_qq_udf_to_entries(word_lib_path)
             else:
                 self.showErrorDialog("格式有误", "文件格式有误，请检查格式重新导入 !")
         else:
@@ -191,8 +221,9 @@ class MainWindow(QMainWindow):
                                                                             "Mac五笔格式 (*.plist);;"
                                                                             "搜狗和QQ五笔格式 (*.ini)")
         if word_lib_path:
-            print(f"选择的文件: {word_lib_path}")
+            self.logText.append(f"选择的文件: {word_lib_path}")
             self.wordLibPathEdit.setText(word_lib_path)
+            self.entries.clear()
             self.read_word_lib_to_entries(word_lib_path)
 
     def export_entries_to_word_lib(self, word_lib_path):

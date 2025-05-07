@@ -7,6 +7,14 @@ import plistlib
 # convert_entries_to_plist：将entries转化为Mac的plist文件
 
 class Macwubi:
+    def get_rank_value(self, entries, entry_code):
+        rank_value = 1
+        for entry in entries:
+            if entry['code'] == entry_code:
+                if rank_value <= entry['rank']:
+                    rank_value = entry['rank'] + 1
+        return rank_value
+
     def plist_to_entries(self, plist_file_name):
         print("plist_to_entries")
         entries = []
@@ -21,7 +29,7 @@ class Macwubi:
                 second_key, code = items_list[1]
                 entry = {
                     'code': code,
-                    'rank': 1,
+                    'rank': self.get_rank_value(entries, code),
                     'word': word,
                 }
                 print(f'entry = {entry}')
