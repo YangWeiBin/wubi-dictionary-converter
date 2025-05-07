@@ -48,15 +48,29 @@ class MainWindow(QMainWindow):
         self.entries = []
         self.wordList.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
         self.entries.clear()
-        self.read_word_lib_to_entries(os.getcwd() + "\\data\\conf.myfmt")
+        user_conf_path = os.getcwd() + "\\data\\conf.myfmt"
+        self.read_word_lib_to_entries(user_conf_path)
+        self.setWindowTitle(f"Wubi Word Converter - {user_conf_path}")
         # connect signal-slot
         self.wordLibPathPbn.clicked.connect(self.import_word_lib)
         self.exportPbn.clicked.connect(self.export_word_lib)
-        self.action_about.triggered.connect(self.show_about_dlg)
         self.wordList.itemDoubleClicked.connect(self.show_modify_word_ui)
         self.addWordPbn.clicked.connect(self.show_add_word_ui)
         self.delWordPbn.clicked.connect(self.del_word)
         self.mergeWordPbn.clicked.connect(self.merge_word)
+        self.SearchLineEditor.textChanged.connect(self.search_word)
+        # connect action
+        self.actionAbout.triggered.connect(self.show_about_dlg)
+        self.actionOpen.triggered.connect(self.import_word_lib)
+        self.actionClearLog.triggered.connect(lambda: self.logText.clear())
+        self.actionAddWord.triggered.connect(self.show_add_word_ui)
+        self.actionDelWord.triggered.connect(self.del_word)
+        self.actionSaveAs.triggered.connect(self.export_word_lib)
+
+        self.actionSave.triggered.connect(self.show_about_dlg)
+        self.actionMergeConf.triggered.connect(self.show_about_dlg)
+        self.actionOpenLocalLib.triggered.connect(self.show_about_dlg)
+
 
 
     # @pyqtSlot()
@@ -98,6 +112,21 @@ class MainWindow(QMainWindow):
                 self.logText.append(f"合并的文件: {word_lib_path}")
                 self.read_word_lib_to_entries(word_lib_path)
 
+    def search_word(self, search_str):
+        if search_str == "":
+            # 如果搜索字符串为空，显示所有行
+            for row in range(self.wordList.rowCount()):
+                self.wordList.setRowHidden(row, False)
+        else:
+            search_str = search_str.lower()  # 转为小写以实现不区分大小写
+            for row in range(self.wordList.rowCount()):
+                row_found = False
+                for col in range(self.wordList.columnCount()):
+                    item = self.wordList.item(row, col)
+                    if item and search_str in item.text().lower():  # 查找字符串
+                        row_found = True
+                        break
+                self.wordList.setRowHidden(row, not row_found)  # 根据查找结果隐藏或显示行
 
     def show_add_word_ui(self):
         update_word_dlg = updateword.UpdateWordDlg()

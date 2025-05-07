@@ -58,8 +58,3 @@ class Macwubi:
 
     def convert_plist_to_entries(self, plist_file_path):
         return self.plist_to_entries(plist_file_path)
-
-
-
-
-
