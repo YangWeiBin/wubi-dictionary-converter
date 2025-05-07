@@ -1,5 +1,7 @@
 import sys
 import os
+import subprocess
+import platform
 
 
 import Microsoft.microsoft_wubi as mswubi
@@ -48,12 +50,11 @@ class MainWindow(QMainWindow):
         self.entries = []
         self.wordList.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
         self.entries.clear()
-        user_conf_path = os.getcwd() + "\\data\\conf.myfmt"
-        self.read_word_lib_to_entries(user_conf_path)
-        self.setWindowTitle(f"Wubi Word Converter - {user_conf_path}")
+        # self.cur_word_path = os.getcwd() + "\\data\\conf.myfmt"
+        self.cur_word_path = os.getcwd() + "\\data\\conf.myfmt"
+        self.read_word_lib_to_entries(self.cur_word_path)
+        self.setWindowTitle(f"Wubi Word Converter - {self.cur_word_path}")
         # connect signal-slot
-        self.wordLibPathPbn.clicked.connect(self.import_word_lib)
-        self.exportPbn.clicked.connect(self.export_word_lib)
         self.wordList.itemDoubleClicked.connect(self.show_modify_word_ui)
         self.addWordPbn.clicked.connect(self.show_add_word_ui)
         self.delWordPbn.clicked.connect(self.del_word)
@@ -66,13 +67,34 @@ class MainWindow(QMainWindow):
         self.actionAddWord.triggered.connect(self.show_add_word_ui)
         self.actionDelWord.triggered.connect(self.del_word)
         self.actionSaveAs.triggered.connect(self.export_word_lib)
+        self.actionSave.triggered.connect(lambda: self.export_entries_to_word_lib(self.cur_word_path))
+        self.actionMergeConf.triggered.connect(self.merge_conf_word_lib)
+        self.actionOpenLocalLib.triggered.connect(lambda: self.open_directory(os.path.dirname(self.cur_word_path)))
 
-        self.actionSave.triggered.connect(self.show_about_dlg)
-        self.actionMergeConf.triggered.connect(self.show_about_dlg)
-        self.actionOpenLocalLib.triggered.connect(self.show_about_dlg)
+    def merge_conf_word_lib(self):
+        conf_path = os.getcwd() + "\\data\\conf.myfmt"
+        self.read_word_lib_to_entries(conf_path)
+        self.export_entries_to_word_lib(conf_path)
+        self.logText.append(f"合并到 {conf_path} 完成!")
 
+    def open_directory(self, directory):
+        self.logText.append(f"打开 {directory} !")
+        if os.path.exists(directory):
+            subprocess.Popen(f'explorer "{directory}"')
+        else:
+            self.logText.append(f"Directory {directory} does not exist.!")
 
+        # 获取当前操作系统
+        current_os = platform.system()
+        if current_os == "Windows":subprocess.Popen(f'explorer "{directory}"')
 
+        elif current_os == "Darwin":  # macOS
+            subprocess.Popen(["open", directory])
+        elif current_os == "Linux":
+            # 这里假设使用的是 GNOME 的 Nautilus 文件管理器，可以根据需要调整
+            subprocess.Popen(["xdg-open", directory])
+        else:
+            self.logText.append(f"不支持在{current_os}上打开：{directory}!")
     # @pyqtSlot()
     def show_about_dlg(self):
         about_dlg = aboutdlg.AboutDlg()
@@ -251,12 +273,14 @@ class MainWindow(QMainWindow):
                                                                             "搜狗和QQ五笔格式 (*.ini)")
         if word_lib_path:
             self.logText.append(f"选择的文件: {word_lib_path}")
-            self.wordLibPathEdit.setText(word_lib_path)
+            self.cur_word_path = word_lib_path
+            self.setWindowTitle(f"Wubi Word Converter - {word_lib_path}")
             self.entries.clear()
             self.read_word_lib_to_entries(word_lib_path)
 
     def export_entries_to_word_lib(self, word_lib_path):
         extension = self.get_file_extension(word_lib_path)
+        is_succeed = True
         if extension == '.myfmt':
             self.my_format_obj.entries_to_txt(self.entries, word_lib_path)
         elif extension == '.dat':
@@ -270,6 +294,11 @@ class MainWindow(QMainWindow):
         elif extension == '.txt':
             # qq usr txt
             self.qq_wubi_obj.convert_entries_to_usr(self.entries, word_lib_path)
+        else:
+            is_succeed = False
+            self.logText.append(f"不支持的格式:  {extension}, 导出文件失败!")
+        if is_succeed:
+            self.logText.append(f"导出: {word_lib_path} 成功!")
 
 
     # @pyqtSlot()

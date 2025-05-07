@@ -1,4 +1,5 @@
 code=blen, rank=2, word=blender
+code=blen, rank=1, word=blender
 code=git, rank=1, word=github
 code=iisg, rank=1, word=水杯
 code=jnqk, rank=1, word=电锅
@@ -9,12 +10,14 @@ code=satf, rank=1, word=框选
 code=tfpg, rank=1, word=待定
 code=tool, rank=1, word=toolchain
 code=tuud, rank=1, word=  →  
+code=tuud, rank=1, word=→
 code=uddl, rank=1, word=减面
 code=uddm, rank=1, word=减面
 code=wei, rank=1, word=Weibin
 code=wgtf, rank=1, word=全选
 code=wgty, rank=1, word=合入
 code=wytr, rank=1, word=储物
+code=xuj, rank=1, word=Xujie
 code=z, rank=1, word=.
 code=z, rank=2, word=[]
 code=z, rank=3, word=``
