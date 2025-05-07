@@ -1,8 +1,6 @@
 import sys
 import os
 
-import convertor
-
 sys.path.append('./MS')
 sys.path.append('./Mac')
 sys.path.append('./MyFormat')
@@ -16,7 +14,6 @@ sys.path.append('./PyQtUi/qss')
 
 import MS.MSwubi as mswubi
 import Mac.Macwubi as macwubi
-import Util.util as util
 import MyFormat.MyFormatTxt as myformat
 import QQ.QQwubi as qqwubi
 import Sougou.SOUGOUwubi as sougouwubi
@@ -37,7 +34,6 @@ sys.path.append(path_script)
 sys.path.append(path_packages + '/PySide6')
 sys.path.append(path_packages + '/qt6_tools')
 
-from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtWidgets import (QMainWindow, QApplication, QDialog, QFileDialog, QTableView,
                              QTableWidgetItem, QComboBox, QMessageBox,
                              QLineEdit, QStyledItemDelegate)
