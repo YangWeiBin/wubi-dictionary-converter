@@ -1,9 +1,8 @@
 import sys
 import os
 
-import PyQtUi.main_window as mainwindow
-
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from PyQt6 import uic
 
 lenove_env_path_script = 'D:/Anaconda3-2023.09/Lib/site-packages'
 lenove_env_path_packages = 'D:/Anaconda3-2023.09/Lib/site-packages'
@@ -18,10 +17,11 @@ sys.path.append(path_script)
 sys.path.append(path_packages + '/PySide6')
 sys.path.append(path_packages + '/qt6_tools')
 
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QDialog
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = mainwindow.MainWindow()
-    window.show()
-    sys.exit(app.exec())
+
+class AboutDlg(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("./PyQtUi/about_dialog.ui", self)
+        self.okPbn.clicked.connect(self.close)
