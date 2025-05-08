@@ -19,9 +19,12 @@ sys.path.append(path_packages + '/PySide6')
 sys.path.append(path_packages + '/qt6_tools')
 
 from PyQt6.QtWidgets import QApplication
+from PyQt6.QtGui import QFont
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    font = QFont("Arial", 11)  # 设置字体为 Arial，大小为 12
+    app.setFont(font)
     window = mainwindow.MainWindow()
     window.show()
     sys.exit(app.exec())

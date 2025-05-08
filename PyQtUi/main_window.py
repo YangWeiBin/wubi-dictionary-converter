@@ -54,6 +54,7 @@ class MainWindow(QMainWindow):
         self.cur_word_path = os.getcwd() + "\\data\\conf.myfmt"
         self.read_word_lib_to_entries(self.cur_word_path)
         self.setWindowTitle(f"Wubi Word Converter - {self.cur_word_path}")
+        self.setWindowIcon(QIcon("./PyQtUi/qss/icon/wubi-converter.ico"))
         # connect signal-slot
         self.wordList.itemDoubleClicked.connect(self.show_modify_word_ui)
         self.addWordPbn.clicked.connect(self.show_add_word_ui)
