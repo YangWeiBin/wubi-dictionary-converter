@@ -111,10 +111,7 @@
                      </size>
                     </property>
                     <property name="text">
-                     <string>S</string>
-                    </property>
-                    <property name="icon">
-                     <iconset theme="QIcon::ThemeIcon::EditFind"/>
+                     <string/>
                     </property>
                    </widget>
                   </item>
@@ -141,11 +138,8 @@
                    <height>25</height>
                   </size>
                  </property>
-                 <property name="styleSheet">
-                  <string notr="true">image: url(:/qss/psblack/branch_open.png);</string>
-                 </property>
                  <property name="text">
-                  <string>A</string>
+                  <string/>
                  </property>
                 </widget>
                </item>
@@ -169,11 +163,8 @@
                    <height>25</height>
                   </size>
                  </property>
-                 <property name="styleSheet">
-                  <string notr="true">image: url(:/qss/psblack/branch_open.png);</string>
-                 </property>
                  <property name="text">
-                  <string>+</string>
+                  <string/>
                  </property>
                 </widget>
                </item>
@@ -197,11 +188,8 @@
                    <height>25</height>
                   </size>
                  </property>
-                 <property name="styleSheet">
-                  <string notr="true">image: url(:/qss/psblack/branch_close.png);</string>
-                 </property>
                  <property name="text">
-                  <string>-</string>
+                  <string/>
                  </property>
                 </widget>
                </item>
@@ -416,6 +404,8 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="img.qrc"/>
+ </resources>
  <connections/>
 </ui>

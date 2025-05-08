@@ -30,10 +30,9 @@ sys.path.append(path_packages + '/qt6_tools')
 
 from PyQt6.QtWidgets import (QMainWindow, QApplication, QFileDialog,
                              QTableView, QTableWidgetItem, QMessageBox)
-from PyQt6.QtGui import QPalette, QColor
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import QSize
+from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtGui import QPixmap, QIcon, QPalette, QColor, QPainter
+from PyQt6.QtSvg import QSvgRenderer
 
 
 class MainWindow(QMainWindow):
@@ -53,14 +52,21 @@ class MainWindow(QMainWindow):
         # self.cur_word_path = os.getcwd() + "\\data\\conf.myfmt"
         self.cur_word_path = os.getcwd() + "\\data\\conf.myfmt"
         self.read_word_lib_to_entries(self.cur_word_path)
+        self.SearchLineEditor.setFocus()
         self.setWindowTitle(f"Wubi Word Converter - {self.cur_word_path}")
         self.setWindowIcon(QIcon("./PyQtUi/qss/icon/wubi-converter.ico"))
+        # set button Icon
+        self.mergeWordPbn.setIcon(QIcon("./PyQtUi/qss/psblack/download.svg"))
+        self.addWordPbn.setIcon(QIcon("./PyQtUi/qss/psblack/plus.svg"))
+        self.delWordPbn.setIcon(QIcon("./PyQtUi/qss/psblack/trash.svg"))
+        self.searchPbn.setIcon(QIcon("./PyQtUi/qss/psblack/search.svg"))
         # connect signal-slot
         self.wordList.itemDoubleClicked.connect(self.show_modify_word_ui)
         self.addWordPbn.clicked.connect(self.show_add_word_ui)
         self.delWordPbn.clicked.connect(self.del_word)
         self.mergeWordPbn.clicked.connect(self.merge_word)
         self.SearchLineEditor.textChanged.connect(self.search_word)
+        self.searchPbn.clicked.connect(self.search_word)
         # connect action
         self.actionAbout.triggered.connect(self.show_about_dlg)
         self.actionOpen.triggered.connect(self.import_word_lib)

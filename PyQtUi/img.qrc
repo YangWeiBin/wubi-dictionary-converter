@@ -1,0 +1,8 @@
+<RCC>
+  <qresource>
+    <file>qss/psblack/download.svg</file>
+    <file>qss/psblack/plus.svg</file>
+    <file>qss/psblack/search.svg</file>
+    <file>qss/psblack/trash.svg</file>
+  </qresource>
+</RCC>
