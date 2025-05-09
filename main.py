@@ -23,8 +23,8 @@ from PyQt6.QtGui import QFont
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    font = QFont("Arial", 11)  # 设置字体为 Arial，大小为 12
+    font = QFont("Arial", 12)  # 设置字体为 Arial，大小为 12
     app.setFont(font)
-    window = mainwindow.MainWindow()
+    window = mainwindow.MainWindow(font)
     window.show()
     sys.exit(app.exec())

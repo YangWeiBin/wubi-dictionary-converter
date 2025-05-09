@@ -31,16 +31,18 @@ sys.path.append(path_packages + '/qt6_tools')
 from PyQt6.QtWidgets import (QMainWindow, QApplication, QFileDialog,
                              QTableView, QTableWidgetItem, QMessageBox)
 from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtGui import QPixmap, QIcon, QPalette, QColor, QPainter
-from PyQt6.QtSvg import QSvgRenderer
+from PyQt6.QtGui import QIcon, QPalette, QColor, QFont
+
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, cur_font):
         super().__init__()
         # 加载 .ui 文件
         uic.loadUi("./PyQtUi/main_window.ui", self)
         self.setWindowStyle()
+        self.setFont(cur_font)  # 设置传入的字体
+        self.centralwidget.setFont(cur_font)
         self.ms_wubi_obj = mswubi.MSwubi()
         self.mac_wubi_obj = macwubi.Macwubi()
         self.my_format_obj = myformat.MyFormat()
@@ -184,8 +186,7 @@ class MainWindow(QMainWindow):
         palette.setColor(QPalette.ColorRole.Window, QColor(palette_color))
         QApplication.instance().setPalette(palette)
         QApplication.instance().setStyleSheet(qss)
-        self.searchPbn.setIcon(QIcon.fromTheme('edit-find'))  # 使用内置图标
-        self.searchPbn.setIconSize(QSize(16, 16))  # 设置图标大小
+
 
     def add_word(self, entry):
         row_count = self.wordList.rowCount()
