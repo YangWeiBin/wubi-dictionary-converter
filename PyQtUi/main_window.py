@@ -14,6 +14,7 @@ import PyQtUi.about_dlg as aboutdlg
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from PyQt6 import uic
+from resources.main_window import Ui_MainWindow
 
 lenove_env_path_script = 'D:/Anaconda3-2023.09/Lib/site-packages'
 lenove_env_path_packages = 'D:/Anaconda3-2023.09/Lib/site-packages'
@@ -39,47 +40,49 @@ class MainWindow(QMainWindow):
     def __init__(self, cur_font):
         super().__init__()
         # 加载 .ui 文件
-        uic.loadUi("./resources/main_window.ui", self)
+        # uic.loadUi("./resources/main_window.ui", self)
+        self.ui = Ui_MainWindow()  # 创建 UI 实例
+        self.ui.setupUi(self)  # 设置 UI
         self.setWindowStyle()
         self.setFont(cur_font)  # 设置传入的字体
-        self.centralwidget.setFont(cur_font)
-        self.set_menu_font(self.menubar, cur_font)
+        self.ui.centralwidget.setFont(cur_font)
+        self.set_menu_font(self.ui.menubar, cur_font)
         self.ms_wubi_obj = mswubi.MSwubi()
         self.mac_wubi_obj = macwubi.Macwubi()
         self.my_format_obj = myformat.MyFormat()
         self.qq_wubi_obj = qqwubi.QQwubi()
         self.sougou_wubi_obj = sougouwubi.SOUGOUwubi()
         self.entries = []
-        self.wordList.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
+        self.ui.wordList.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
         self.entries.clear()
         # self.cur_word_path = os.getcwd() + "\\data\\conf.myfmt"
         self.cur_word_path = os.getcwd() + "\\resources\\conf.myfmt"
         self.read_word_lib_to_entries(self.cur_word_path)
-        self.SearchLineEditor.setFocus()
+        self.ui.SearchLineEditor.setFocus()
         self.setWindowTitle(f"Wubi Word Converter - {self.cur_word_path}")
         self.setWindowIcon(QIcon("./resources/qss/icon/wubi-converter.ico"))
         # set button Icon
-        self.mergeWordPbn.setIcon(QIcon("./resources/qss/psblack/download.svg"))
-        self.addWordPbn.setIcon(QIcon("./resources/qss/psblack/plus.svg"))
-        self.delWordPbn.setIcon(QIcon("./resources/qss/psblack/trash.svg"))
-        self.searchPbn.setIcon(QIcon("./resources/qss/psblack/search.svg"))
+        self.ui.mergeWordPbn.setIcon(QIcon("./resources/qss/psblack/download.svg"))
+        self.ui.addWordPbn.setIcon(QIcon("./resources/qss/psblack/plus.svg"))
+        self.ui.delWordPbn.setIcon(QIcon("./resources/qss/psblack/trash.svg"))
+        self.ui.searchPbn.setIcon(QIcon("./resources/qss/psblack/search.svg"))
         # connect signal-slot
-        self.wordList.itemDoubleClicked.connect(self.show_modify_word_ui)
-        self.addWordPbn.clicked.connect(self.show_add_word_ui)
-        self.delWordPbn.clicked.connect(self.del_word)
-        self.mergeWordPbn.clicked.connect(self.merge_word)
-        self.SearchLineEditor.textChanged.connect(self.search_word)
-        self.searchPbn.clicked.connect(self.search_word)
+        self.ui.wordList.itemDoubleClicked.connect(self.show_modify_word_ui)
+        self.ui.addWordPbn.clicked.connect(self.show_add_word_ui)
+        self.ui.delWordPbn.clicked.connect(self.del_word)
+        self.ui.mergeWordPbn.clicked.connect(self.merge_word)
+        self.ui.SearchLineEditor.textChanged.connect(self.search_word)
+        self.ui.searchPbn.clicked.connect(self.search_word)
         # connect action
-        self.actionAbout.triggered.connect(self.show_about_dlg)
-        self.actionOpen.triggered.connect(self.import_word_lib)
-        self.actionClearLog.triggered.connect(lambda: self.logText.clear())
-        self.actionAddWord.triggered.connect(self.show_add_word_ui)
-        self.actionDelWord.triggered.connect(self.del_word)
-        self.actionSaveAs.triggered.connect(self.export_word_lib)
-        self.actionSave.triggered.connect(lambda: self.export_entries_to_word_lib(self.cur_word_path))
-        self.actionMergeConf.triggered.connect(self.merge_conf_word_lib)
-        self.actionOpenLocalLib.triggered.connect(lambda: self.open_directory(os.path.dirname(self.cur_word_path)))
+        self.ui.actionAbout.triggered.connect(self.show_about_dlg)
+        self.ui.actionOpen.triggered.connect(self.import_word_lib)
+        self.ui.actionClearLog.triggered.connect(lambda: self.ui.logText.clear())
+        self.ui.actionAddWord.triggered.connect(self.show_add_word_ui)
+        self.ui.actionDelWord.triggered.connect(self.del_word)
+        self.ui.actionSaveAs.triggered.connect(self.export_word_lib)
+        self.ui.actionSave.triggered.connect(lambda: self.export_entries_to_word_lib(self.cur_word_path))
+        self.ui.actionMergeConf.triggered.connect(self.merge_conf_word_lib)
+        self.ui.actionOpenLocalLib.triggered.connect(lambda: self.open_directory(os.path.dirname(self.cur_word_path)))
 
     def set_menu_font(self, menu_bar, font):
         menu_bar.setFont(font)
@@ -102,14 +105,14 @@ class MainWindow(QMainWindow):
         conf_path = os.getcwd() + "\\data\\conf.myfmt"
         self.read_word_lib_to_entries(conf_path)
         self.export_entries_to_word_lib(conf_path)
-        self.logText.append(f"合并到 {conf_path} 完成!")
+        self.ui.logText.append(f"合并到 {conf_path} 完成!")
 
     def open_directory(self, directory):
-        self.logText.append(f"打开 {directory} !")
+        self.ui.logText.append(f"打开 {directory} !")
         if os.path.exists(directory):
             subprocess.Popen(f'explorer "{directory}"')
         else:
-            self.logText.append(f"Directory {directory} does not exist.!")
+            self.ui.logText.append(f"Directory {directory} does not exist.!")
 
         # 获取当前操作系统
         current_os = platform.system()
@@ -121,7 +124,7 @@ class MainWindow(QMainWindow):
             # 这里假设使用的是 GNOME 的 Nautilus 文件管理器，可以根据需要调整
             subprocess.Popen(["xdg-open", directory])
         else:
-            self.logText.append(f"不支持在{current_os}上打开：{directory}!")
+            self.ui.logText.append(f"不支持在{current_os}上打开：{directory}!")
     # @pyqtSlot()
     def show_about_dlg(self):
         about_dlg = aboutdlg.AboutDlg()
@@ -136,17 +139,17 @@ class MainWindow(QMainWindow):
         return mapping.get(n, None)  # 如果 n 不在字典中，返回 None
 
     def del_word(self):
-        selected_items = self.wordList.selectedItems()
+        selected_items = self.ui.wordList.selectedItems()
         selected_rows = set()  # 使用集合存储行号，避免重复
         if selected_items:
             for item in selected_items:
                 selected_rows.add(item.row())
             for index in sorted(selected_rows, reverse=True):
                 entry = self.entries.pop(index)
-                self.logText.append(f"Delete row:{index}, entry = {entry}.")
+                self.ui.logText.append(f"Delete row:{index}, entry = {entry}.")
             self.update_entries_to_list()
         else:
-            self.logText.append("No row is selected!")
+            self.ui.logText.append("No row is selected!")
 
     def merge_word(self):
         # 弹出文件选择对话框
@@ -158,24 +161,24 @@ class MainWindow(QMainWindow):
                                                        "搜狗和QQ五笔格式 (*.ini)")
         for word_lib_path in word_lib_paths:
             if word_lib_path:
-                self.logText.append(f"合并的文件: {word_lib_path}")
+                self.ui.logText.append(f"合并的文件: {word_lib_path}")
                 self.read_word_lib_to_entries(word_lib_path)
 
     def search_word(self, search_str):
         if search_str == "":
             # 如果搜索字符串为空，显示所有行
-            for row in range(self.wordList.rowCount()):
-                self.wordList.setRowHidden(row, False)
+            for row in range(self.ui.wordList.rowCount()):
+                self.ui.wordList.setRowHidden(row, False)
         else:
             search_str = search_str.lower()  # 转为小写以实现不区分大小写
-            for row in range(self.wordList.rowCount()):
+            for row in range(self.ui.wordList.rowCount()):
                 row_found = False
-                for col in range(self.wordList.columnCount()):
-                    item = self.wordList.item(row, col)
+                for col in range(self.ui.wordList.columnCount()):
+                    item = self.ui.wordList.item(row, col)
                     if item and search_str in item.text().lower():  # 查找字符串
                         row_found = True
                         break
-                self.wordList.setRowHidden(row, not row_found)  # 根据查找结果隐藏或显示行
+                self.ui.wordList.setRowHidden(row, not row_found)  # 根据查找结果隐藏或显示行
 
     def show_add_word_ui(self):
         update_word_dlg = updateword.UpdateWordDlg()
@@ -186,13 +189,13 @@ class MainWindow(QMainWindow):
         # first delete then add
         row = item.row()
         entry = self.entries.pop(row) ## delete row item
-        self.logText.append(f"Modify row:{row}, entry = {entry}.")
+        self.ui.logText.append(f"Modify row:{row}, entry = {entry}.")
         update_word_dlg = updateword.UpdateWordDlg(entry_modify=entry)
         update_word_dlg.entry_modify_dlg.connect(self.add_word_by_dlg)
         update_word_dlg.exec()
 
     def add_word_by_dlg(self, entry):
-        self.logText.append(f"Added entry={entry}.")
+        self.ui.logText.append(f"Added entry={entry}.")
         self.entries.append(entry)
         self.update_entries_to_list()
 
@@ -207,17 +210,17 @@ class MainWindow(QMainWindow):
 
 
     def add_word(self, entry):
-        row_count = self.wordList.rowCount()
-        self.wordList.setRowCount(row_count + 1)
+        row_count = self.ui.wordList.rowCount()
+        self.ui.wordList.setRowCount(row_count + 1)
         item_code = QTableWidgetItem(entry['code'])
         item_code.setFlags(item_code.flags() & ~Qt.ItemFlag.ItemIsEditable)
-        self.wordList.setItem(row_count, 0, item_code)
+        self.ui.wordList.setItem(row_count, 0, item_code)
         item_rank = QTableWidgetItem(str(entry['rank']))
         item_rank.setFlags(item_rank.flags() & ~Qt.ItemFlag.ItemIsEditable)
-        self.wordList.setItem(row_count, 1, item_rank)
+        self.ui.wordList.setItem(row_count, 1, item_rank)
         item_word = QTableWidgetItem(str(entry['word']))
         item_word.setFlags(item_word.flags() & ~Qt.ItemFlag.ItemIsEditable)
-        self.wordList.setItem(row_count, 2, item_word)
+        self.ui.wordList.setItem(row_count, 2, item_word)
 
     def is_sougou_ini_file(self, line):
         equal_pos = line.find('=')
@@ -243,10 +246,10 @@ class MainWindow(QMainWindow):
     def update_entries_to_list(self):
         self.remove_entries_duplicates()
         self.entries.sort(key=lambda x: x['code'])
-        self.wordList.setRowCount(0)  # 清空表格
+        self.ui.wordList.setRowCount(0)  # 清空表格
         for entry in self.entries:
             self.add_word(entry)
-        self.logText.append(f"更新词库成功!")
+        self.ui.logText.append(f"更新词库成功!")
 
     def remove_entries_duplicates(self):
         unique_entries = []
@@ -259,7 +262,7 @@ class MainWindow(QMainWindow):
                 seen.add(identifier)  # 如果没有，添加到集合
                 unique_entries.append(entry)  # 并将 entry 添加到 unique_entries
             else:
-                self.logText.append(f"entry = {entry} 已存在!")
+                self.ui.logText.append(f"entry = {entry} 已存在!")
         self.entries = unique_entries
 
     def read_word_lib_to_entries(self, word_lib_path):
@@ -298,7 +301,7 @@ class MainWindow(QMainWindow):
                                                                             "Mac五笔格式 (*.plist);;"
                                                                             "搜狗和QQ五笔格式 (*.ini)")
         if word_lib_path:
-            self.logText.append(f"选择的文件: {word_lib_path}")
+            self.ui.logText.append(f"选择的文件: {word_lib_path}")
             self.cur_word_path = word_lib_path
             self.setWindowTitle(f"Wubi Word Converter - {word_lib_path}")
             self.entries.clear()
@@ -322,9 +325,9 @@ class MainWindow(QMainWindow):
             self.qq_wubi_obj.convert_entries_to_usr(self.entries, word_lib_path)
         else:
             is_succeed = False
-            self.logText.append(f"不支持的格式:  {extension}, 导出文件失败!")
+            self.ui.logText.append(f"不支持的格式:  {extension}, 导出文件失败!")
         if is_succeed:
-            self.logText.append(f"导出: {word_lib_path} 成功!")
+            self.ui.logText.append(f"导出: {word_lib_path} 成功!")
 
 
     # @pyqtSlot()
@@ -337,7 +340,7 @@ class MainWindow(QMainWindow):
                                                                             "QQ五笔自定义 (*.ini);;"
                                                                             "QQ五笔词组 (*.txt)")
         if word_lib_path:
-            self.logText.append(f"导出的文件: {word_lib_path}")
+            self.ui.logText.append(f"导出的文件: {word_lib_path}")
             self.export_entries_to_word_lib(word_lib_path)
         else:
-            self.logText.append(f"导出的文件: {word_lib_path}， 为空 !")
+            self.ui.logText.append(f"导出的文件: {word_lib_path}， 为空 !")
