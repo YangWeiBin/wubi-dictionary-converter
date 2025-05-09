@@ -43,6 +43,7 @@ class MainWindow(QMainWindow):
         self.setWindowStyle()
         self.setFont(cur_font)  # 设置传入的字体
         self.centralwidget.setFont(cur_font)
+        self.set_menu_font(self.menubar, cur_font)
         self.ms_wubi_obj = mswubi.MSwubi()
         self.mac_wubi_obj = macwubi.Macwubi()
         self.my_format_obj = myformat.MyFormat()
@@ -79,6 +80,23 @@ class MainWindow(QMainWindow):
         self.actionSave.triggered.connect(lambda: self.export_entries_to_word_lib(self.cur_word_path))
         self.actionMergeConf.triggered.connect(self.merge_conf_word_lib)
         self.actionOpenLocalLib.triggered.connect(lambda: self.open_directory(os.path.dirname(self.cur_word_path)))
+
+    def set_menu_font(self, menu_bar, font):
+        menu_bar.setFont(font)
+        # 遍历菜单栏中的所有菜单
+        for i in range(menu_bar.actions().__len__()):
+            menu_action = menu_bar.actions()[i]
+            menu = menu_action.menu()
+
+            # 如果是菜单，设置其字体
+            if menu:
+                menu.setFont(font)
+                # 遍历菜单中的所有动作，设置其字体
+                for action in menu.actions():
+                    action.setFont(font)
+
+            # 设置菜单动作的字体
+            menu_action.setFont(font)
 
     def merge_conf_word_lib(self):
         conf_path = os.getcwd() + "\\data\\conf.myfmt"
