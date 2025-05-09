@@ -220,3 +220,11 @@ Requires: PyQt6-Qt6, PyQt6-sip
 Required-by: pyqt6-plugins, pyqt6-tools
 ```
 
+## 4 打包exe
+
+```shell
+pyinstaller --onefile --noconsole --distpath wubi-converter --add-data "resources/*;resources" wubi-dictionary-converter.py
+```
+
+
+

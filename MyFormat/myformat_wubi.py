@@ -8,7 +8,6 @@ class MyFormat:
                 file.write(line)
 
     def txt_to_entries(self, my_format_filename):
-        print(f'my_format_filename = {my_format_filename}')
         entries = []
         with open(my_format_filename, 'r', encoding='utf-8') as file:
             for line in file:

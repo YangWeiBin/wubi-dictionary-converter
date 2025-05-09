@@ -16,7 +16,6 @@ class Macwubi:
         return rank_value
 
     def plist_to_entries(self, plist_file_name):
-        print("plist_to_entries")
         entries = []
         # 读取plist文件
         with open(plist_file_name, 'rb') as fp:
@@ -32,7 +31,6 @@ class Macwubi:
                     'rank': self.get_rank_value(entries, code),
                     'word': word,
                 }
-                print(f'entry = {entry}')
                 entries.append(entry)
         return entries
 

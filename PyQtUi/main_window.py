@@ -39,7 +39,7 @@ class MainWindow(QMainWindow):
     def __init__(self, cur_font):
         super().__init__()
         # 加载 .ui 文件
-        uic.loadUi("./PyQtUi/main_window.ui", self)
+        uic.loadUi("./resources/main_window.ui", self)
         self.setWindowStyle()
         self.setFont(cur_font)  # 设置传入的字体
         self.centralwidget.setFont(cur_font)
@@ -53,16 +53,16 @@ class MainWindow(QMainWindow):
         self.wordList.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
         self.entries.clear()
         # self.cur_word_path = os.getcwd() + "\\data\\conf.myfmt"
-        self.cur_word_path = os.getcwd() + "\\data\\conf.myfmt"
+        self.cur_word_path = os.getcwd() + "\\resources\\conf.myfmt"
         self.read_word_lib_to_entries(self.cur_word_path)
         self.SearchLineEditor.setFocus()
         self.setWindowTitle(f"Wubi Word Converter - {self.cur_word_path}")
-        self.setWindowIcon(QIcon("./PyQtUi/qss/icon/wubi-converter.ico"))
+        self.setWindowIcon(QIcon("./resources/qss/icon/wubi-converter.ico"))
         # set button Icon
-        self.mergeWordPbn.setIcon(QIcon("./PyQtUi/qss/psblack/download.svg"))
-        self.addWordPbn.setIcon(QIcon("./PyQtUi/qss/psblack/plus.svg"))
-        self.delWordPbn.setIcon(QIcon("./PyQtUi/qss/psblack/trash.svg"))
-        self.searchPbn.setIcon(QIcon("./PyQtUi/qss/psblack/search.svg"))
+        self.mergeWordPbn.setIcon(QIcon("./resources/qss/psblack/download.svg"))
+        self.addWordPbn.setIcon(QIcon("./resources/qss/psblack/plus.svg"))
+        self.delWordPbn.setIcon(QIcon("./resources/qss/psblack/trash.svg"))
+        self.searchPbn.setIcon(QIcon("./resources/qss/psblack/search.svg"))
         # connect signal-slot
         self.wordList.itemDoubleClicked.connect(self.show_modify_word_ui)
         self.addWordPbn.clicked.connect(self.show_add_word_ui)
@@ -197,7 +197,7 @@ class MainWindow(QMainWindow):
         self.update_entries_to_list()
 
     def setWindowStyle(self):
-        with open("./PyQtUi/qss/psblack.css", "r") as file:
+        with open("./resources/qss/psblack.css", "r") as file:
             qss = file.read()
         palette_color = qss[20:27]  # 这里假设颜色是一个字符串，比如 "#FFFFFF"
         palette = QPalette()

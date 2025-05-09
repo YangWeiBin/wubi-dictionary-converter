@@ -28,7 +28,7 @@ class UpdateWordDlg(QDialog):
         super().__init__()
         self.entry = entry_modify if entry_modify else {}
         self.is_add_new_entry = True
-        uic.loadUi("./PyQtUi/update_word.ui", self)
+        uic.loadUi("./resources/update_word.ui", self)
         self.cancelPbn.clicked.connect(self.close)
         self.yesPbn.clicked.connect(self.update_new_word)
         self.codeEdit.textChanged.connect(self.on_code_changed)

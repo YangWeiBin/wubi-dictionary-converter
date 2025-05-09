@@ -28,7 +28,6 @@ class MSwubi:
         entries = []
         export_stamp = struct.unpack('<I', r.read(4))[0]    # 导出的时间戳
         export_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(export_stamp))
-        print(f"时间: {export_time}")
         for i in range(count):
             r.seek(offset_start + 4 * i)
             offset = struct.unpack('<I', r.read(4))[0]

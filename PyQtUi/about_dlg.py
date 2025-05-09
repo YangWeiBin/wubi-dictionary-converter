@@ -23,5 +23,5 @@ from PyQt6.QtWidgets import QDialog
 class AboutDlg(QDialog):
     def __init__(self):
         super().__init__()
-        uic.loadUi("./PyQtUi/about_dialog.ui", self)
+        uic.loadUi("./resources/about_dialog.ui", self)
         self.okPbn.clicked.connect(self.close)
