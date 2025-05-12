@@ -1,7 +1,7 @@
 import sys
 import os
 
-import PyQtUi.main_window as mainwindow
+import PyQtLib.main_window as mainwindow
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 

@@ -9,12 +9,11 @@ import Mac.mac_wubi as macwubi
 import MyFormat.myformat_wubi as myformat
 import QQ.qq_wubi as qqwubi
 import Sogou.sogou_wubi as sougouwubi
-import PyQtUi.update_word as updateword
-import PyQtUi.about_dlg as aboutdlg
+import PyQtLib.update_word as updateword
+import PyQtLib.about_dlg as aboutdlg
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from PyQt6 import uic
-from resources.main_window import Ui_MainWindow
+from PyQtLib.ui.main_window import Ui_MainWindow
 
 lenove_env_path_script = 'D:/Anaconda3-2023.09/Lib/site-packages'
 lenove_env_path_packages = 'D:/Anaconda3-2023.09/Lib/site-packages'
@@ -31,9 +30,8 @@ sys.path.append(path_packages + '/qt6_tools')
 
 from PyQt6.QtWidgets import (QMainWindow, QApplication, QFileDialog,
                              QTableView, QTableWidgetItem, QMessageBox)
-from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtGui import QIcon, QPalette, QColor, QFont
-
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon, QPalette, QColor
 
 
 class MainWindow(QMainWindow):

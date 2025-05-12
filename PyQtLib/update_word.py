@@ -2,8 +2,7 @@ import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from PyQt6 import uic
-from resources.update_word import Ui_update_word
+from PyQtLib.ui.update_word import Ui_update_word
 
 lenove_env_path_script = 'D:/Anaconda3-2023.09/Lib/site-packages'
 lenove_env_path_packages = 'D:/Anaconda3-2023.09/Lib/site-packages'
@@ -20,6 +19,7 @@ sys.path.append(path_packages + '/qt6_tools')
 
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtGui import QIcon
 
 
 class UpdateWordDlg(QDialog):
@@ -29,6 +29,7 @@ class UpdateWordDlg(QDialog):
         super().__init__()
         self.ui = Ui_update_word()  # 创建 UI 实例
         self.ui.setupUi(self)  # 设置 UI
+        self.setWindowIcon(QIcon("./resources/qss/icon/wubi-converter.ico"))
         self.entry = entry_modify if entry_modify else {}
         self.is_add_new_entry = True
         # uic.loadUi("./resources/update_word.ui", self)
