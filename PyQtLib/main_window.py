@@ -144,7 +144,7 @@ class MainWindow(QMainWindow):
                 selected_rows.add(item.row())
             for index in sorted(selected_rows, reverse=True):
                 entry = self.entries.pop(index)
-                self.ui.logText.append(f"Delete row:{index}, entry = {entry}.")
+                self.ui.logText.append(f"Delete entry = {entry}.")
             self.update_entries_to_list()
         else:
             self.ui.logText.append("No row is selected!")
@@ -179,18 +179,20 @@ class MainWindow(QMainWindow):
                 self.ui.wordList.setRowHidden(row, not row_found)  # 根据查找结果隐藏或显示行
 
     def show_add_word_ui(self):
-        update_word_dlg = updateword.UpdateWordDlg()
+        update_word_dlg = updateword.UpdateWordDlg(entry_modify=None, row_modify=-1)
         update_word_dlg.entry_added_dlg.connect(self.add_word_by_dlg)
         update_word_dlg.exec()
 
     def show_modify_word_ui(self, item):
-        # first delete then add
-        row = item.row()
-        entry = self.entries.pop(row) ## delete row item
-        self.ui.logText.append(f"Modify row:{row}, entry = {entry}.")
-        update_word_dlg = updateword.UpdateWordDlg(entry_modify=entry)
-        update_word_dlg.entry_modify_dlg.connect(self.add_word_by_dlg)
+        entry = self.entries[item.row()]
+        update_word_dlg = updateword.UpdateWordDlg(entry_modify=entry, row_modify=item.row())
+        update_word_dlg.entry_modify_dlg.connect(self.modify_word_entry)
         update_word_dlg.exec()
+
+    def modify_word_entry(self, old_entry, new_entry, row):
+        self.entries[row] = new_entry
+        self.update_entries_to_list()
+        self.ui.logText.append(f"Modify entry:{old_entry} to entry = {new_entry}.")
 
     def add_word_by_dlg(self, entry):
         self.ui.logText.append(f"Added entry={entry}.")

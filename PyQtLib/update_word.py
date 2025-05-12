@@ -24,24 +24,31 @@ from PyQt6.QtGui import QIcon
 
 class UpdateWordDlg(QDialog):
     entry_added_dlg = pyqtSignal(dict)
-    entry_modify_dlg = pyqtSignal(dict)
-    def __init__(self, entry_modify=None):
+    entry_modify_dlg = pyqtSignal(dict, dict, int)
+    def __init__(self, entry_modify=None, row_modify=-1):
         super().__init__()
         self.ui = Ui_update_word()  # 创建 UI 实例
         self.ui.setupUi(self)  # 设置 UI
         self.setWindowIcon(QIcon("./resources/qss/icon/wubi-converter.ico"))
-        self.entry = entry_modify if entry_modify else {}
+        self.entry_modify = entry_modify
+        self.row = row_modify
         self.is_add_new_entry = True
         # uic.loadUi("./resources/update_word.ui", self)
         self.ui.cancelPbn.clicked.connect(self.close)
         self.ui.yesPbn.clicked.connect(self.update_new_word)
         self.ui.codeEdit.textChanged.connect(self.on_code_changed)
         if entry_modify:
+            self.entry = entry_modify.copy()
             self.is_add_new_entry = False
             self.ui.codeEdit.setText(entry_modify['code'])
             self.ui.rankCombo.setCurrentText(str(entry_modify['rank']))
             self.ui.wordEdit.setText(entry_modify['word'])
         else:
+            self.entry = {
+                'code': '',
+                'rank': 1,
+                'word': '',
+            }
             self.is_add_new_entry = True
             self.ui.codeEdit.setText('')
             self.ui.rankCombo.setCurrentText('1')
@@ -77,5 +84,6 @@ class UpdateWordDlg(QDialog):
             if self.is_add_new_entry:
                 self.entry_added_dlg.emit(self.entry)  # 发出信号并传递输入的值
             else:
-                self.entry_modify_dlg.emit(self.entry)  # 发出信号并传递输入的值
+                if self.entry_modify != self.entry:
+                    self.entry_modify_dlg.emit(self.entry_modify, self.entry, self.row)  # 发出信号并传递输入的值
             self.accept()  # 关闭对话框
