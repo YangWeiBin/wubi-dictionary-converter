@@ -37,6 +37,7 @@ class UpdateWordDlg(QDialog):
         self.ui.cancelPbn.clicked.connect(self.close)
         self.ui.yesPbn.clicked.connect(self.update_new_word)
         self.ui.codeEdit.textChanged.connect(self.on_code_changed)
+        self.ui.wordEdit.textChanged.connect(self.on_word_changed)
         if entry_modify:
             self.entry = entry_modify.copy()
             self.is_add_new_entry = False
@@ -56,23 +57,41 @@ class UpdateWordDlg(QDialog):
 
     def on_code_changed(self, text):
         self.entry['code'] = text
-        if self.is_legal_entry():
+        result, char = self.is_legal_code()
+        if result is None:
+            self.ui.yesPbn.setEnabled(False)
+            self.ui.label.setText('编码非法: 字符串长度不在1到4之间!')
+        elif result is True:
             self.ui.yesPbn.setEnabled(True)
             self.ui.label.setText('编码合法!')
-        else:
+        elif result is False:
             self.ui.yesPbn.setEnabled(False)
-            self.ui.label.setText('编码非法!')
+            self.ui.label.setText(f"字符串无效，错误的字符: {char}!")
 
-    def is_legal_entry(self):
-        if self.entry:
-            code = self.entry['code']
-            if isinstance(code, str) and 0 < len(code) <= 4:
-                return True
-            else:
-                return False
-        else:
-            self.ui.label.setText('编码为空!')
+    def is_legal_word(self):
+        word = self.entry['word']
+        if word == '':
+            self.ui.yesPbn.setEnabled(False)
+            self.ui.label.setText('词组不能是为空！')
             return False
+        else:
+            self.ui.yesPbn.setEnabled(True)
+            self.ui.label.setText('编码合法!')
+            return True
+
+    def on_word_changed(self, text):
+        self.entry['word'] = text
+        self.is_legal_word()
+
+    def is_legal_code(self):
+        allowed_characters = set("abcdefghijklmnopqrstuvwxyz,./';[]\\\\-`")
+        code = self.entry.get('code')
+        if self.entry is None or code is None or len(code) < 1 or len(code) > 4:
+            return None, ''
+        for char in code:
+            if char not in allowed_characters:
+                return False, char
+        return True, ''
 
     def update_new_word(self):
         self.entry = {
@@ -80,7 +99,7 @@ class UpdateWordDlg(QDialog):
             'rank': int(self.ui.rankCombo.currentText()),
             'word': self.ui.wordEdit.text(),
         }
-        if self.is_legal_entry():  # 确保输入不为空
+        if self.is_legal_code() and self.is_legal_word():  # 确保输入不为空
             if self.is_add_new_entry:
                 self.entry_added_dlg.emit(self.entry)  # 发出信号并传递输入的值
             else:

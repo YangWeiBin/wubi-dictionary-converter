@@ -70,7 +70,7 @@ class MainWindow(QMainWindow):
         self.ui.delWordPbn.clicked.connect(self.del_word)
         self.ui.mergeWordPbn.clicked.connect(self.merge_word)
         self.ui.SearchLineEditor.textChanged.connect(self.search_word)
-        self.ui.searchPbn.clicked.connect(self.search_word)
+        self.ui.searchPbn.clicked.connect(lambda: self.search_word(self.ui.SearchLineEditor.text()))
         # connect action
         self.ui.actionAbout.triggered.connect(self.show_about_dlg)
         self.ui.actionOpen.triggered.connect(self.import_word_lib)
@@ -88,14 +88,12 @@ class MainWindow(QMainWindow):
         for i in range(menu_bar.actions().__len__()):
             menu_action = menu_bar.actions()[i]
             menu = menu_action.menu()
-
             # 如果是菜单，设置其字体
             if menu:
                 menu.setFont(font)
                 # 遍历菜单中的所有动作，设置其字体
                 for action in menu.actions():
                     action.setFont(font)
-
             # 设置菜单动作的字体
             menu_action.setFont(font)
 
