@@ -98,7 +98,7 @@ class MainWindow(QMainWindow):
             menu_action.setFont(font)
 
     def merge_conf_word_lib(self):
-        conf_path = os.getcwd() + "\\data\\conf.myfmt"
+        conf_path = os.getcwd() + "\\resources\\conf.myfmt"
         self.read_word_lib_to_entries(conf_path)
         self.export_entries_to_word_lib(conf_path)
         self.ui.logText.append(f"合并到 {conf_path} 完成!")
@@ -249,6 +249,17 @@ class MainWindow(QMainWindow):
             self.add_word(entry)
         self.ui.logText.append(f"更新词库成功!")
 
+    def compare_entries_and_add(self, get_entries_from_file):
+        for entry in get_entries_from_file:
+            # 检查 entry 是否在 self.entries 中不存在
+            if not any(entry['code'] == existing['code'] and
+                       entry['rank'] == existing['rank'] and
+                       entry['word'] == existing['word']
+                       for existing in self.entries):
+                # 如果不存在，则插入到 self.entries 中
+                self.entries.append(entry)
+                self.ui.logText.append(f"entry = {entry} 已添加!")
+
     def remove_entries_duplicates(self):
         unique_entries = []
         seen = set()
@@ -265,25 +276,27 @@ class MainWindow(QMainWindow):
 
     def read_word_lib_to_entries(self, word_lib_path):
         extension = self.get_file_extension(word_lib_path)
+        get_entries_from_file = []
         if extension == '.myfmt':
-            self.entries += self.my_format_obj.txt_to_entries(word_lib_path)
+            get_entries_from_file += self.my_format_obj.txt_to_entries(word_lib_path)
         elif extension == '.dat':
-            self.entries += self.ms_wubi_obj.convert_dat_to_entries(word_lib_path)
+            get_entries_from_file += self.ms_wubi_obj.convert_dat_to_entries(word_lib_path)
         elif extension == '.plist':
-            self.entries += self.mac_wubi_obj.convert_plist_to_entries(word_lib_path)
+            get_entries_from_file += self.mac_wubi_obj.convert_plist_to_entries(word_lib_path)
         elif extension == '.ini':
             is_sougou_ini = None
             with open(word_lib_path, 'r', encoding='utf-8') as file:
                 first_line = file.readline()
                 is_sougou_ini = self.is_sougou_ini_file(first_line)
             if is_sougou_ini is True:
-                self.entries += self.sougou_wubi_obj.convert_sougou_udf_to_entries(word_lib_path)
+                get_entries_from_file += self.sougou_wubi_obj.convert_sougou_udf_to_entries(word_lib_path)
             elif is_sougou_ini is False:
-                self.entries += self.qq_wubi_obj.convert_qq_udf_to_entries(word_lib_path)
+                get_entries_from_file += self.qq_wubi_obj.convert_qq_udf_to_entries(word_lib_path)
             else:
                 self.showErrorDialog("格式有误", "文件格式有误，请检查格式重新导入 !")
         else:
             self.showErrorDialog("导入为空", "导入的词库文件为空，请检查格式重新导入 !")
+        self.compare_entries_and_add(get_entries_from_file)
         self.update_entries_to_list()
 
     def get_file_extension(self, file_path):
