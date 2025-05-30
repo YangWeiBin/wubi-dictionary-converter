@@ -9,12 +9,11 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1003, 825)
-        MainWindow.setMinimumSize(QtCore.QSize(1000, 700))
+        MainWindow.resize(800, 500)
+        MainWindow.setMinimumSize(QtCore.QSize(800, 500))
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_11 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -38,6 +37,8 @@ class Ui_MainWindow(object):
         self.listWgt_4.setTitle("")
         self.listWgt_4.setObjectName("listWgt_4")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.listWgt_4)
+        self.verticalLayout.setContentsMargins(4, 4, 4, 4)
+        self.verticalLayout.setSpacing(4)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -51,6 +52,7 @@ class Ui_MainWindow(object):
         self.listPbnWgt_4.setMaximumSize(QtCore.QSize(16777215, 60))
         self.listPbnWgt_4.setObjectName("listPbnWgt_4")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.listPbnWgt_4)
+        self.horizontalLayout_2.setContentsMargins(3, 3, 3, 3)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.SearchLineEditor = QtWidgets.QLineEdit(parent=self.listPbnWgt_4)
         self.SearchLineEditor.setMinimumSize(QtCore.QSize(0, 40))
@@ -141,11 +143,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.addWidget(self.logText)
         self.btabWgt.addTab(self.logWgt, "")
         self.verticalLayout_11.addWidget(self.btabWgt)
-        self.verticalLayout_11.setStretch(0, 8)
-        self.verticalLayout_11.setStretch(1, 3)
+        self.verticalLayout_11.setStretch(0, 3)
+        self.verticalLayout_11.setStretch(1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1003, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
         self.menubar.setObjectName("menubar")
         self.editMenu = QtWidgets.QMenu(parent=self.menubar)
         self.editMenu.setObjectName("editMenu")

@@ -31,7 +31,7 @@ sys.path.append(path_packages + '/qt6_tools')
 from PyQt6.QtWidgets import (QMainWindow, QApplication, QFileDialog,
                              QTableView, QTableWidgetItem, QMessageBox)
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QIcon, QPalette, QColor
+from PyQt6.QtGui import QIcon, QPalette, QColor, QScreen
 
 
 class MainWindow(QMainWindow):
@@ -42,6 +42,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()  # 创建 UI 实例
         self.ui.setupUi(self)  # 设置 UI
         self.setWindowStyle()
+        self.set_size_by_screen()
         self.setFont(cur_font)  # 设置传入的字体
         self.ui.centralwidget.setFont(cur_font)
         self.set_menu_font(self.ui.menubar, cur_font)
@@ -66,6 +67,7 @@ class MainWindow(QMainWindow):
         self.ui.searchPbn.setIcon(QIcon("./resources/qss/psblack/search.svg"))
         # connect signal-slot
         self.ui.wordList.itemDoubleClicked.connect(self.show_modify_word_ui)
+        self.ui.wordList.resizeEvent = self.on_resize
         self.ui.addWordPbn.clicked.connect(self.show_add_word_ui)
         self.ui.delWordPbn.clicked.connect(self.del_word)
         self.ui.mergeWordPbn.clicked.connect(self.merge_word)
@@ -81,6 +83,35 @@ class MainWindow(QMainWindow):
         self.ui.actionSave.triggered.connect(lambda: self.export_entries_to_word_lib(self.cur_word_path))
         self.ui.actionMergeConf.triggered.connect(self.merge_conf_word_lib)
         self.ui.actionOpenLocalLib.triggered.connect(lambda: self.open_directory(os.path.dirname(self.cur_word_path)))
+
+    def set_size_by_screen(self):
+        screen = QScreen.availableGeometry(QApplication.primaryScreen())
+        screen_width = screen.width()
+        screen_height = screen.height()
+
+        print(f"screen_height = {screen_height}")
+
+        min_width = 800
+        min_height = 460
+
+        if screen_height < 650:
+            self.resize(800, 460)
+        else:
+            self.resize(int(screen_height * 0.8 * 60 / 46), int(screen_height * 0.8))
+
+    def on_resize(self, event):
+        # 获取 QTableWidget 的宽度
+        total_width = self.ui.wordList.width()
+        column_count = self.ui.wordList.columnCount()
+
+        # 计算每列的宽度
+        if column_count > 0:
+            column_width = total_width // column_count
+            for column in range(column_count):
+                self.ui.wordList.setColumnWidth(column, column_width)
+
+        # 调用父类的 resizeEvent 以保留其他功能
+        super(MainWindow, self).resizeEvent(event)
 
     def set_menu_font(self, menu_bar, font):
         menu_bar.setFont(font)

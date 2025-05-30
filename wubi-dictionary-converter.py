@@ -11,8 +11,8 @@ lenove_env_path_packages = 'D:/Anaconda3-2023.09/Lib/site-packages'
 hp_env_path_packages = 'D:/00-YangWeiBin/software/Python311/site-packages'
 hp_env_path_script = 'D:/00-YangWeiBin/software/Python311/Scripts'
 
-path_packages = hp_env_path_packages
-path_script = hp_env_path_script
+path_packages = lenove_env_path_packages
+path_script = lenove_env_path_script
 
 sys.path.append(path_script)
 sys.path.append(path_packages + '/PySide6')

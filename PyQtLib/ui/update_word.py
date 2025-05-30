@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_update_word(object):
     def setupUi(self, update_word):
         update_word.setObjectName("update_word")
-        update_word.resize(683, 370)
+        update_word.resize(658, 395)
         update_word.setMinimumSize(QtCore.QSize(0, 370))
         self.verticalLayout = QtWidgets.QVBoxLayout(update_word)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -26,6 +26,8 @@ class Ui_update_word(object):
         self.apathConfBox_3.setMaximumSize(QtCore.QSize(16777215, 1000000))
         self.apathConfBox_3.setObjectName("apathConfBox_3")
         self.verticalLayout_14 = QtWidgets.QVBoxLayout(self.apathConfBox_3)
+        self.verticalLayout_14.setContentsMargins(4, 4, 4, 4)
+        self.verticalLayout_14.setSpacing(4)
         self.verticalLayout_14.setObjectName("verticalLayout_14")
         self.codeEdit = QtWidgets.QLineEdit(parent=self.apathConfBox_3)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed)
@@ -77,6 +79,8 @@ class Ui_update_word(object):
         self.cpathConfBox.setMaximumSize(QtCore.QSize(16777215, 1000000))
         self.cpathConfBox.setObjectName("cpathConfBox")
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.cpathConfBox)
+        self.verticalLayout_9.setContentsMargins(4, 4, 4, 4)
+        self.verticalLayout_9.setSpacing(4)
         self.verticalLayout_9.setObjectName("verticalLayout_9")
         self.wordEdit = QtWidgets.QLineEdit(parent=self.cpathConfBox)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed)
